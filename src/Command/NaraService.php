@@ -72,6 +72,8 @@ final class NaraService
         int $naId,
         #[Option('Print the raw API payload as JSON')]
         bool $json = false,
+        #[Option('Also list which objects already have transcriptions, and by whom')]
+        bool $transcriptions = false,
     ): int {
         if ($json) {
             $io->writeln(json_encode($this->client->getRecordPayload($naId), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE));
@@ -91,6 +93,17 @@ final class NaraService
             static fn ($o): array => [$o->objectId, $o->objectType, $o->objectFilename, $o->objectUrl],
             $record->digitalObjects,
         ));
+
+        if ($transcriptions) {
+            $byObject = $this->client->getTranscriptions($naId);
+            $rows = [];
+            foreach ($record->digitalObjects as $o) {
+                $latest = null === $o->objectId ? null : (($byObject[$o->objectId] ?? []) ? end($byObject[$o->objectId]) : null);
+                $rows[] = [$o->objectId, $latest ? \count($byObject[$o->objectId]) : 0, $latest ? implode(', ', $latest->contributorNames()) : '', $latest ? \strlen((string) $latest->contribution) : ''];
+            }
+            $io->table(['objectId', 'versions', 'contributors', 'chars'], $rows);
+            $io->writeln(\sprintf('%d of %d objects have a transcription.', \count(array_filter($rows, static fn (array $r): bool => $r[1] > 0)), \count($rows)));
+        }
 
         return Command::SUCCESS;
     }
