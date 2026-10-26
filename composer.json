@@ -1,0 +1,36 @@
+{
+    "name": "survos/nara-bundle",
+    "description": "Symfony integration for the National Archives Catalog client: env-configured key and user id, nara:search, nara:record and nara:contribute",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["symfony", "nara", "archives", "catalog", "transcription"],
+    "require": {
+        "php": "^8.5",
+        "survos/kit-bundle": "^2.5",
+        "survos/nara-client": "^2.5",
+        "symfony/config": "^8.1",
+        "symfony/console": "^8.1",
+        "symfony/dependency-injection": "^8.1",
+        "symfony/http-client": "^8.1",
+        "symfony/http-kernel": "^8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13",
+        "symfony/framework-bundle": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Survos\\NaraBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Survos\\NaraBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "symfony": {
+            "require": "^8.1"
+        }
+    }
+}
