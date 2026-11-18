@@ -33,3 +33,10 @@ bin/console nara:record 170821856 [--json]
 # dry-run unless --live; text from --text, --text-file or STDIN
 bin/console nara:contribute transcription 170821856 --object-id=170821859 --text-file=page1.txt [--live]
 ```
+
+### Person-name candidates
+
+`php bin/console nara:search "Fred Wesley Goodenough" --person` quotes the name as a phrase.
+The usual record-group, online and limit options still apply. Results can match text inside
+a multi-person file. Check the individual scan and corroborating dates before linking a person.
+Series dates are not birth or death dates. Ordinary searches keep their existing behavior.

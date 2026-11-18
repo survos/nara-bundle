@@ -37,10 +37,17 @@ final class NaraService
         bool $transcribed = false,
         #[Option('Print the raw hits as JSON')]
         bool $json = false,
+        #[Option('Search an exact person-name phrase; results still require identity checks')]
+        bool $person = false,
     ): int {
+        if ($person && ('' === trim($query) || '*' === $query)) {
+            $io->error('A person name is required with --person.');
+
+            return Command::INVALID;
+        }
         $search = new SearchQuery(
-            q: ctype_digit($query) ? null : $query,
-            naId: ctype_digit($query) ? $query : null,
+            q: $person ? SearchQuery::person($query)->q : (ctype_digit($query) ? null : $query),
+            naId: !$person && ctype_digit($query) ? $query : null,
             recordGroup: $recordGroup,
             availableOnline: $online,
             objectType: $objectType,
